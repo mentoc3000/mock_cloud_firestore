@@ -2,6 +2,7 @@ library mock_cloud_firestore;
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mock_cloud_firestore/factories.dart';
@@ -30,6 +31,18 @@ dynamic _reviveTimestamp(key, value) {
   }
   return value;
 }
+
+// UUID generator reproduced from 
+// https://github.com/firebase/firebase-js-sdk/blob/73a586c92afe3f39a844b2be86086fddb6877bb7/packages/firestore/src/util/misc.ts#L36
+String newId() {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    String autoId = '';
+    final random = Random();
+    for (int i = 0; i < 20; i++) {
+      autoId += chars[(random.nextDouble() * chars.length).floor()];
+    }
+    return autoId;
+  }
 
 class MockCloudFirestore extends Mock {
   Map<String, dynamic> sourceParsed;
@@ -64,7 +77,8 @@ class MockCloudFirestore extends Mock {
 
     when(mcr.add(any)).thenAnswer((Invocation inv) {
       var value = inv.positionalArguments[0];
-      MockDocumentReference mdr = createDocumentReferance(null, value);
+      final uuid = newId();
+      MockDocumentReference mdr = createDocumentReferance(uuid, value);
 
       MockQuerySnapshot mqs = createMockQuerySnapshot(colData, added: [value]);
       mcr.controller.add(mqs);

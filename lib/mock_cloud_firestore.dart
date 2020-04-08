@@ -32,8 +32,9 @@ dynamic _reviveTimestamp(key, value) {
   return value;
 }
 
+// UUID generator reproduced from 
+// https://github.com/firebase/firebase-js-sdk/blob/73a586c92afe3f39a844b2be86086fddb6877bb7/packages/firestore/src/util/misc.ts#L36
 String newId() {
-    // Alphanumeric characters
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     String autoId = '';
     final random = Random();

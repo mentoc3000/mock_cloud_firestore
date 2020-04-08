@@ -233,8 +233,9 @@ void main() {
     });
 
     Map<String, dynamic> data = {"id": "1000", r"$": "Project"};
-    await col.add(data);
+    final docref = await col.add(data);
 
+    expect(docref.documentID, isNotNull);
     expect(hasData, true);
   });
 
